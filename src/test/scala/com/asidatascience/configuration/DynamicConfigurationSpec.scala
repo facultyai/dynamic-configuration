@@ -53,8 +53,7 @@ with ScalaFutures {
     updater: => Future[Configuration]
   ): DynamicConfiguration[Configuration] =
     DynamicConfiguration[Configuration](
-      initialDelay = 500.millis,
-      updateInterval = 1.seconds
+      RefreshOptions(500.millis, 1.seconds)
     )(updater)
 
   "DynamicConfiguration" should "return None initially" in {

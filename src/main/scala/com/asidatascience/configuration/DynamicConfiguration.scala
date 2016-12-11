@@ -4,7 +4,6 @@ import akka.actor.ActorSystem
 
 import scala.util.{Success, Failure}
 import scala.concurrent.{Future, ExecutionContext}
-import scala.concurrent.duration._
 
 import java.util.concurrent.atomic.AtomicReference
 
@@ -15,15 +14,12 @@ trait DynamicConfiguration[T] {
 }
 
 object DynamicConfiguration {
-  def apply[T](
-    initialDelay: FiniteDuration,
-    updateInterval: FiniteDuration)
+  def apply[T](refreshOptions: RefreshOptions)
     (updater: => Future[T])
     (implicit system: ActorSystem, context: ExecutionContext)
   :DynamicConfiguration[T] = {
     val helper = new DynamicConfigurationImpl[T] {
-      override val delay = initialDelay
-      override val interval = updateInterval
+      override val options = refreshOptions
       override def updateConfiguration = updater
       override val actorSystem = system
       override val executionContext = context
@@ -37,8 +33,7 @@ object DynamicConfiguration {
 trait DynamicConfigurationImpl[T]
 extends DynamicConfiguration[T] {
 
-  def delay: FiniteDuration
-  def interval: FiniteDuration
+  def options: RefreshOptions
   def updateConfiguration: Future[T]
   implicit def actorSystem: ActorSystem
   implicit def executionContext: ExecutionContext
@@ -51,6 +46,7 @@ extends DynamicConfiguration[T] {
   : AtomicReference[Option[T]] = new AtomicReference(None)
 
   def start(): Unit = {
+    val RefreshOptions(delay, interval) = options
     actorSystem.scheduler.schedule(delay, interval) {
       val oldConfigurationMaybe = currentConfigurationReference.get
       updateConfiguration.onComplete {

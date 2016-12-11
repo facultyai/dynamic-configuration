@@ -1,7 +1,6 @@
 package com.asidatascience.configuration
 
 import scala.concurrent.{Future, ExecutionContext}
-import scala.concurrent.duration.FiniteDuration
 
 import scala.util.Try
 
@@ -14,12 +13,11 @@ object DynamicConfigurationFromS3 {
     s3Client: AmazonS3,
     bucket: String,
     key: String,
-    initialDelay: FiniteDuration,
-    updateInterval: FiniteDuration
+    refreshOptions: RefreshOptions
   )(parser: String => Try[T])
   (implicit system: ActorSystem, context: ExecutionContext) = {
 
-    DynamicConfiguration(initialDelay, updateInterval) {
+    DynamicConfiguration(refreshOptions) {
       Future {
         val contents: String = s3Client.getObjectAsString(bucket, key)
         val configurationTry = parser(contents)
