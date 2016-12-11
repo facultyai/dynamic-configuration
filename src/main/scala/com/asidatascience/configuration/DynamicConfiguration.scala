@@ -27,6 +27,9 @@ object DynamicConfiguration {
     helper.start()
     helper
   }
+
+  def apply[T](updater: => Future[T])(implicit system: ActorSystem, context: ExecutionContext)
+  : DynamicConfiguration[T] = apply(RefreshOptions())(updater)(system, context)
 }
 
 

@@ -13,7 +13,7 @@ object DynamicConfigurationFromS3 {
     s3Client: AmazonS3,
     bucket: String,
     key: String,
-    refreshOptions: RefreshOptions
+    refreshOptions: RefreshOptions = RefreshOptions()
   )(parser: String => Try[T])
   (implicit system: ActorSystem, context: ExecutionContext) = {
 
