@@ -17,7 +17,7 @@ import com.amazonaws.services.s3.AmazonS3
 
 import java.util.concurrent.atomic.AtomicInteger
 
-class DynamicConfigurationServiceFromS3Spec
+class DynamicConfigurationFromS3Spec
 extends FlatSpec
 with Matchers
 with BeforeAndAfterAll
@@ -58,10 +58,10 @@ with ScalaFutures {
     }
   }
 
-  def newDynamicConfigurationService(
+  def newDynamicConfiguration(
     parse: String => Try[Configuration]
-  ): DynamicConfigurationService[Configuration] =
-    DynamicConfigurationServiceFromS3(
+  ): DynamicConfiguration[Configuration] =
+    DynamicConfigurationFromS3(
       mockS3Client,
       dummyBucket,
       dummyKey,
@@ -71,19 +71,18 @@ with ScalaFutures {
 
   "DynamicConfigurationFromS3" should "return None initially" in {
     val parser = new TestConfigurationParser {}
-    val configurationService =
-      newDynamicConfigurationService(parser.parse)
-    configurationService.currentConfiguration shouldEqual None
+    val configuration = newDynamicConfiguration(parser.parse)
+    configuration.currentConfiguration shouldEqual None
   }
 
   it should "register an initial configuration" in {
     val parser = new TestConfigurationParser {}
-    val configurationService =
-      newDynamicConfigurationService(parser.parse)
+    val configuration =
+      newDynamicConfiguration(parser.parse)
 
     eventually {
       parser.nHits.get shouldEqual 1
-      inside (configurationService.currentConfiguration) {
+      inside (configuration.currentConfiguration) {
         case Some(actualConfiguration) =>
           actualConfiguration shouldEqual dummyConfiguration
       }

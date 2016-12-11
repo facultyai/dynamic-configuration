@@ -9,7 +9,7 @@ import akka.actor.ActorSystem
 
 import com.amazonaws.services.s3.AmazonS3
 
-object DynamicConfigurationServiceFromS3 {
+object DynamicConfigurationFromS3 {
   def apply[T](
     s3Client: AmazonS3,
     bucket: String,
@@ -19,7 +19,7 @@ object DynamicConfigurationServiceFromS3 {
   )(parser: String => Try[T])
   (implicit system: ActorSystem, context: ExecutionContext) = {
 
-    DynamicConfigurationService(initialDelay, updateInterval) {
+    DynamicConfiguration(initialDelay, updateInterval) {
       Future {
         val contents: String = s3Client.getObjectAsString(bucket, key)
         val configurationTry = parser(contents)

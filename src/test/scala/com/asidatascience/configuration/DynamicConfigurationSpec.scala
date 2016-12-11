@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 
 import java.util.concurrent.atomic.AtomicInteger
 
-class DynamicConfigurationServiceSpec
+class DynamicConfigurationSpec
 extends FlatSpec
 with Matchers
 with BeforeAndAfterAll
@@ -49,28 +49,28 @@ with ScalaFutures {
     }
   }
 
-  def newDynamicConfigurationService(
+  def newDynamicConfiguration(
     updater: => Future[Configuration]
-  ): DynamicConfigurationService[Configuration] =
-    DynamicConfigurationService[Configuration](
+  ): DynamicConfiguration[Configuration] =
+    DynamicConfiguration[Configuration](
       initialDelay = 500.millis,
       updateInterval = 1.seconds
     )(updater)
 
   "DynamicConfiguration" should "return None initially" in {
     val updater = new TestConfigurationUpdater {}
-    val configurationService = newDynamicConfigurationService(updater.update)
+    val configuration = newDynamicConfiguration(updater.update)
 
-    configurationService.currentConfiguration shouldEqual None
+    configuration.currentConfiguration shouldEqual None
   }
 
   it should "register an initial configuration" in {
     val updater = new TestConfigurationUpdater {}
-    val configurationService = newDynamicConfigurationService(updater.update)
+    val configuration = newDynamicConfiguration(updater.update)
 
     eventually {
       updater.nHits.get shouldEqual 1
-      inside (configurationService.currentConfiguration) {
+      inside (configuration.currentConfiguration) {
         case Some(actualConfiguration) =>
           actualConfiguration shouldEqual updater.lastConfigurationUpdate.get
       }
@@ -79,11 +79,11 @@ with ScalaFutures {
 
   it should "update the configuration regularly" in {
     val updater = new TestConfigurationUpdater {}
-    val configurationService = newDynamicConfigurationService(updater.update)
+    val configuration = newDynamicConfiguration(updater.update)
 
     eventually {
       updater.nHits.get shouldEqual 2
-      configurationService.currentConfiguration should matchPattern {
+      configuration.currentConfiguration should matchPattern {
         case Some(Configuration(_)) =>
       }
     }
@@ -112,11 +112,11 @@ with ScalaFutures {
         }
     }
 
-    val configurationService = newDynamicConfigurationService(updater.update)
+    val configuration = newDynamicConfiguration(updater.update)
 
     eventually {
       updater.nHits.get shouldEqual 1
-      inside(configurationService.currentConfiguration) {
+      inside(configuration.currentConfiguration) {
         case Some(configuration) =>
           configuration shouldEqual firstConfiguration
       }
@@ -124,7 +124,7 @@ with ScalaFutures {
 
     eventually {
       updater.nHits.get should (be > 1 and be < 5)
-      inside(configurationService.currentConfiguration) {
+      inside(configuration.currentConfiguration) {
         case Some(configuration) =>
           configuration shouldEqual firstConfiguration
       }
@@ -132,7 +132,7 @@ with ScalaFutures {
 
     eventually {
       updater.nHits.get should be > 5
-      inside(configurationService.currentConfiguration) {
+      inside(configuration.currentConfiguration) {
         case Some(configuration) =>
           configuration shouldEqual secondConfiguration
       }

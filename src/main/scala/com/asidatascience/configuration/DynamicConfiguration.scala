@@ -10,18 +10,18 @@ import java.util.concurrent.atomic.AtomicReference
 
 import com.typesafe.scalalogging.Logger
 
-trait DynamicConfigurationService[T] {
+trait DynamicConfiguration[T] {
   def currentConfiguration: Option[T]
 }
 
-object DynamicConfigurationService {
+object DynamicConfiguration {
   def apply[T](
     initialDelay: FiniteDuration,
     updateInterval: FiniteDuration)
-  (updater: => Future[T])
-  (implicit system: ActorSystem, context: ExecutionContext):
-DynamicConfigurationService[T] = {
-    val helper = new DynamicConfigurationServiceImpl[T] {
+    (updater: => Future[T])
+    (implicit system: ActorSystem, context: ExecutionContext)
+  :DynamicConfiguration[T] = {
+    val helper = new DynamicConfigurationImpl[T] {
       override val delay = initialDelay
       override val interval = updateInterval
       override def updateConfiguration = updater
@@ -34,8 +34,8 @@ DynamicConfigurationService[T] = {
 }
 
 
-trait DynamicConfigurationServiceImpl[T]
-extends DynamicConfigurationService[T] {
+trait DynamicConfigurationImpl[T]
+extends DynamicConfiguration[T] {
 
   def delay: FiniteDuration
   def interval: FiniteDuration
@@ -43,7 +43,7 @@ extends DynamicConfigurationService[T] {
   implicit def actorSystem: ActorSystem
   implicit def executionContext: ExecutionContext
 
-  private val log = Logger(classOf[DynamicConfigurationService[T]])
+  private val log = Logger(classOf[DynamicConfiguration[T]])
 
   override def currentConfiguration = currentConfigurationReference.get()
 
