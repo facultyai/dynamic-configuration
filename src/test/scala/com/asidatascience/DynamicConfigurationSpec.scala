@@ -11,9 +11,6 @@ import scala.concurrent.duration._
 
 import java.util.concurrent.atomic.AtomicInteger
 
-case object IntentionalException
-extends Exception("intentional exception")
-
 class DynamicConfigurationServiceSpec
 extends FlatSpec
 with Matchers
@@ -21,6 +18,9 @@ with BeforeAndAfterAll
 with Eventually
 with Inside
 with ScalaFutures {
+
+  case object IntentionalException
+  extends Exception("intentional exception")
 
   override implicit val patienceConfig = PatienceConfig(
     timeout = 5.seconds, interval = 50.millis)

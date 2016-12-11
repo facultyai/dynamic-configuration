@@ -13,6 +13,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.4.14",
   "ch.qos.logback" % "logback-classic" % "1.1.7",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
+  "com.amazonaws" % "aws-java-sdk" % "1.11.66",
+  "org.mockito" % "mockito-core" % "2.2.29",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
