@@ -1,8 +1,11 @@
 
-import com.asidatascience.configuration.{DynamicConfigurationFromS3, RefreshOptions}
+import com.asidatascience.configuration.{
+  DynamicConfigurationFromS3, RefreshOptions
+}
 
 import scala.util.Try
-  import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future, Await}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import akka.actor.ActorSystem
 
@@ -32,7 +35,7 @@ class WidgetFrozzler(
 
   val refreshOptions = RefreshOptions(
     initialDelay = 0.millis,
-    updateInterval = 5.minutes
+    updateInterval = 5.seconds
   )
 
   val s3Client = new AmazonS3Client()
@@ -53,6 +56,11 @@ class WidgetFrozzler(
         println(s"Configuration not ready")
     }
   }
+
+  def shutdown: Future[_] = {
+    configurationService.stop
+    actorSystem.terminate
+  }
 }
 
 
@@ -62,10 +70,12 @@ object Simple extends App {
     "examples/simple/sample-configuration.json"
   )
 
-  (1 to 20) foreach { i =>
+  (1 to 7) foreach { i =>
     println(s"Creating widget number $i")
     frozzler.frozzleWidgets
     Thread.sleep(1000)
   }
+
+  Await.ready(frozzler.shutdown, 5.seconds)
 }
 
