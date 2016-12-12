@@ -1,4 +1,6 @@
 
+organization := "com.asidatascience"
+
 name := "dynamic-configuration"
 
 scalaVersion := "2.11.8"
