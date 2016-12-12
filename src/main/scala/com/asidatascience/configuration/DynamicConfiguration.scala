@@ -1,6 +1,6 @@
 package com.asidatascience.configuration
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorSystem, Cancellable}
 
 import scala.util.{Success, Failure}
 import scala.concurrent.{Future, ExecutionContext}
@@ -11,6 +11,7 @@ import com.typesafe.scalalogging.Logger
 
 trait DynamicConfiguration[T] {
   def currentConfiguration: Option[T]
+  def stop: Unit
 }
 
 object DynamicConfiguration {
@@ -48,9 +49,11 @@ extends DynamicConfiguration[T] {
   private val currentConfigurationReference
   : AtomicReference[Option[T]] = new AtomicReference(None)
 
+  var timer: Option[Cancellable] = None
+
   def start(): Unit = {
     val RefreshOptions(delay, interval) = options
-    actorSystem.scheduler.schedule(delay, interval) {
+    val t = actorSystem.scheduler.schedule(delay, interval) {
       val oldConfigurationMaybe = currentConfigurationReference.get
       updateConfiguration.onComplete {
         case Success(newConfiguration)
@@ -65,5 +68,8 @@ extends DynamicConfiguration[T] {
             "Falling back to previous version.", t)
       }
     }
+    timer = Some(t)
   }
+
+  override def stop(): Unit = { timer.foreach { _.cancel } }
 }
