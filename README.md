@@ -15,9 +15,17 @@ Let's assume that your configuration is formatted as JSON:
 
 ```json
 {
-  "widget-model": "WM-2512"
+  "widget-model": "ASI-1292"
 }
 ```
+
+To load and automatically refresh the configuration from S3, create a case class
+that represents your configuration (e.g. `FrozzlerConfiguration` in the example
+below). Then, call `DynamicConfigurationFromS3`, passing in the bucket and key
+at which your configuration file is located and a method for converting from the
+string content of your configuration to a `Try[FrozzlerConfiguration]`.
+
+`DynamicConfigurationFromS3` will return a `DynamicConfiguration` object with a `currentConfiguration` method. This returns an option with either the current configuration, or `None` if the configuration is not loaded yet.
 
 ```scala
 
@@ -32,33 +40,44 @@ import com.amazonaws.services.s3.AmazonS3Client
 
 case class FrozzlerConfiguration(model: String)
 
-class WidgetFrozzler {
+class WidgetFrozzler(
+  configurationS3Bucket: String,
+  configurationS3Key: String
+) {
+
+  implicit val actorSystem = ActorSystem()
 
   private def parseConfiguration(content: String) = {
     // parse the contents of the configuration file
-    val contentAsJson = parse(content)
+    val contentAsJson = JsonMethods.parse(content)
     val JString(model) = (contentAsJson \ "widget-model")
     FrozzlerConfiguration(model)
   }
-  
+
   val refreshOptions = RefreshOptions(
     initialDelay = 0.millis,
-    fetchInterval = 5.minutes
+    updateInterval = 5.seconds
   )
-  
+
   val s3Client = new AmazonS3Client()
 
   val configurationService = DynamicConfigurationFromS3[FrozzlerConfiguration](
     s3Client,
-    "widget-frozzling-bucket",
-    "/path/to/configuration-file.json",
+    configurationS3Bucket,
+    configurationS3Key,
     refreshOptions
   ){ contents => Try { parseConfiguration(contents) } }
-  
-  
+
   def frozzleWidgets = {
-    val currentModel = configurationService.currentConfiguration.model
-    println(s"Creating widget with model $currentModel")
+    configurationService.currentConfiguration match {
+      case Some(configuration) =>
+        val currentModel = configuration.model
+        println(s"Creating widget with model $currentModel")
+      case None =>
+        println(s"Configuration not ready")
+    }
   }
 }
 ```
+
+This is turned into a fully functional example in the `/examples/simple` directory.

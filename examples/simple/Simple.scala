@@ -70,7 +70,7 @@ object Simple extends App {
     "examples/simple/sample-configuration.json"
   )
 
-  (1 to 7) foreach { i =>
+  (1 to 20) foreach { i =>
     println(s"Creating widget number $i")
     frozzler.frozzleWidgets
     Thread.sleep(1000)
