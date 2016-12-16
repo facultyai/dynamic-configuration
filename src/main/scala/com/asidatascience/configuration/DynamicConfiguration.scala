@@ -20,10 +20,10 @@ object DynamicConfiguration {
     (implicit system: ActorSystem, context: ExecutionContext)
   :DynamicConfiguration[T] = {
     val helper = new DynamicConfigurationImpl[T] {
-      override val options = refreshOptions
+      override def options = refreshOptions
       override def updateConfiguration = updater
-      override val actorSystem = system
-      override val executionContext = context
+      override def actorSystem = system
+      override def executionContext = context
     }
     helper.start()
     helper
@@ -32,7 +32,6 @@ object DynamicConfiguration {
   def apply[T](updater: => Future[T])(implicit system: ActorSystem, context: ExecutionContext)
   : DynamicConfiguration[T] = apply(RefreshOptions())(updater)(system, context)
 }
-
 
 trait DynamicConfigurationImpl[T]
 extends DynamicConfiguration[T] {

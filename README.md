@@ -1,4 +1,3 @@
-
 # Dynamic configuration tools
 
 This repository provides tools for setting up configuration that refreshes at
@@ -61,7 +60,7 @@ class WidgetFrozzler(
 
   val s3Client = new AmazonS3Client()
 
-  val configurationService = DynamicConfigurationFromS3[FrozzlerConfiguration](
+  lazy val configurationService = DynamicConfigurationFromS3[FrozzlerConfiguration](
     s3Client,
     configurationS3Bucket,
     configurationS3Key,
