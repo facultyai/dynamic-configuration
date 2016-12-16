@@ -1,4 +1,3 @@
-
 import com.asidatascience.configuration.{
   DynamicConfigurationFromS3, RefreshOptions
 }
@@ -15,7 +14,6 @@ import org.json4s.native.JsonMethods
 import scala.concurrent.duration._
 
 import com.amazonaws.services.s3.AmazonS3Client
-
 
 case class FrozzlerConfiguration(model: String)
 
@@ -40,7 +38,7 @@ class WidgetFrozzler(
 
   val s3Client = new AmazonS3Client()
 
-  val configurationService = DynamicConfigurationFromS3[FrozzlerConfiguration](
+  lazy val configurationService = DynamicConfigurationFromS3[FrozzlerConfiguration](
     s3Client,
     configurationS3Bucket,
     configurationS3Key,
@@ -63,7 +61,6 @@ class WidgetFrozzler(
   }
 }
 
-
 object Simple extends App {
   val frozzler = new WidgetFrozzler(
     "dynamic-configuration.asidatascience.com",
@@ -78,4 +75,3 @@ object Simple extends App {
 
   Await.ready(frozzler.shutdown, 5.seconds)
 }
-
