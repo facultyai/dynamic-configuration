@@ -35,7 +35,8 @@ import org.json4s._
 
 import scala.concurrent.duration._
 
-import com.amazonaws.services.s3.AmazonS3Client
+import com.amazonaws.regions.Regions
+import com.amazonaws.services.s3.AmazonS3ClientBuilder
 
 case class FrozzlerConfiguration(model: String)
 
@@ -58,7 +59,8 @@ class WidgetFrozzler(
     updateInterval = 5.seconds
   )
 
-  val s3Client = new AmazonS3Client()
+  val s3Client = AmazonS3ClientBuilder
+    .standard().withRegion(Regions.EU_WEST_1).build
 
   lazy val configurationService = DynamicConfigurationFromS3[FrozzlerConfiguration](
     s3Client,
