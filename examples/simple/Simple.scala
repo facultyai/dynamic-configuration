@@ -1,19 +1,14 @@
-import com.asidatascience.configuration.{
-  DynamicConfigurationFromS3, RefreshOptions
-}
-
-import scala.util.Try
-import scala.concurrent.{Future, Await}
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future, Await}
+import scala.util.Try
 
 import akka.actor.ActorSystem
-
+import com.amazonaws.regions.Regions
+import com.amazonaws.services.s3.AmazonS3ClientBuilder
+import com.asidatascience.configuration.{DynamicConfigurationFromS3, RefreshOptions}
 import org.json4s._
 import org.json4s.native.JsonMethods
-
-import scala.concurrent.duration._
-
-import com.amazonaws.services.s3.AmazonS3Client
 
 case class FrozzlerConfiguration(model: String)
 
@@ -36,7 +31,8 @@ class WidgetFrozzler(
     updateInterval = 5.seconds
   )
 
-  val s3Client = new AmazonS3Client()
+  val s3Client = AmazonS3ClientBuilder
+    .standard().withRegion(Regions.EU_WEST_1).build
 
   lazy val configurationService = DynamicConfigurationFromS3[FrozzlerConfiguration](
     s3Client,
