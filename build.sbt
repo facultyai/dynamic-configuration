@@ -25,7 +25,7 @@ publishMavenStyle := false
 
 s3region := com.amazonaws.services.s3.model.Region.EU_Ireland
 
-s3credentials := new com.amazonaws.auth.EnvironmentVariableCredentialsProvider()
+s3credentials := new com.amazonaws.auth.DefaultAWSCredentialsProviderChain()
 
 s3acl := com.amazonaws.services.s3.model.CannedAccessControlList.Private
 
