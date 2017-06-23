@@ -15,7 +15,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.1",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
   "com.amazonaws" % "aws-java-sdk" % "1.11.98",
-  "org.mockito" % "mockito-core" % "2.7.14",
+  "org.mockito" % "mockito-core" % "2.7.14" % "test",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
