@@ -12,11 +12,14 @@ git.useGitDescribe := true
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.4.17",
+  "com.typesafe.play" %% "play-ws" % "2.5.14",
   "ch.qos.logback" % "logback-classic" % "1.2.1",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
   "com.amazonaws" % "aws-java-sdk-s3" % "1.11.98",
   "org.mockito" % "mockito-core" % "2.7.14" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+  "com.typesafe.play" %% "play" % "2.5.14" % "test",
+  "com.typesafe.play" %% "play-test" % "2.5.14" % "test"
 )
 
 scalacOptions ++= Seq("-feature", "-deprecation", "-Ywarn-unused-import")
