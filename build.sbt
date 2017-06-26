@@ -2,7 +2,7 @@ organization := "com.asidatascience"
 
 name := "dynamic-configuration"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.11"
 
 enablePlugins(GitVersioning)
 
