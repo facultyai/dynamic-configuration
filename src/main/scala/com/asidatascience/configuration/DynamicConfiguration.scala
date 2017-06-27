@@ -52,7 +52,7 @@ extends DynamicConfiguration[T] {
 
   def start(): Unit = {
     val RefreshOptions(delay, interval) = options
-    val t = actorSystem.scheduler.schedule(delay, interval) {
+    val task = actorSystem.scheduler.schedule(delay, interval) {
       val oldConfigurationMaybe = currentConfigurationReference.get
       updateConfiguration.onComplete {
         case Success(newConfiguration)
@@ -67,7 +67,7 @@ extends DynamicConfiguration[T] {
             "Falling back to previous version.", t)
       }
     }
-    timer = Some(t)
+    timer = Some(task)
   }
 
   override def stop(): Unit = { timer.foreach { _.cancel } }
