@@ -50,12 +50,12 @@ s3credentials := new com.amazonaws.auth.DefaultAWSCredentialsProviderChain()
 
 s3acl := com.amazonaws.services.s3.model.CannedAccessControlList.Private
 
-publishTo := {
-  val prefix = if (isSnapshot.value) "snapshots" else "releases"
-  Some(
-    s3resolver
-      .value("ASI " + prefix + " S3 bucket", s3(s"asi-$prefix-repository")) withIvyPatterns)
-}
+publishTo := Some(
+  if (isSnapshot.value)
+    Opts.resolver.sonatypeSnapshots
+   else
+    Opts.resolver.sonatypeStaging
+  )
 
 scalafmtTestOnCompile in Compile := true
 scalafmtTestOnCompile in Test := true
