@@ -56,7 +56,7 @@ extends DynamicConfiguration[T] {
       val oldConfigurationMaybe = currentConfigurationReference.get
       updateConfiguration.onComplete {
         case Success(newConfiguration)
-            if Some(newConfiguration) == oldConfigurationMaybe =>
+            if oldConfigurationMaybe.contains(newConfiguration) =>
         case Success(newConfiguration) =>
           currentConfigurationReference.compareAndSet(
             oldConfigurationMaybe, Some(newConfiguration))
