@@ -1,0 +1,9 @@
+dist: trusty
+language: scala
+scala:
+  - 2.11.11
+jdk:
+  - oraclejdk8
+  - openjdk8
+test:
+  - sbt ++$TRAVIS_SCALA_VERSION test
