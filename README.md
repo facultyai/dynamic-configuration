@@ -1,5 +1,7 @@
 # Dynamic configuration tools
 
+[![Build Status](https://travis-ci.org/ASIDataScience/dynamic-configuration.svg)](https://travis-ci.org/ASIDataScience/dynamic-configuration)
+
 This repository provides tools for setting up configuration that refreshes at
 particular intervals. It assumes that the current configuration lives in a file
 on Amazon S3. It tries to refresh the configuration at regular intervals.
