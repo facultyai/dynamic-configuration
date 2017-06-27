@@ -22,7 +22,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-test" % "2.5.14" % "test"
 )
 
-scalacOptions ++= Seq("-feature", "-deprecation", "-Ywarn-unused-import")
+addCompilerPlugin("org.psywerx.hairyfotr" %% "linter" % "0.1.17")
 
 publishMavenStyle := false
 
