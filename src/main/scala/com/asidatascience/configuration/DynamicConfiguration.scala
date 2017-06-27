@@ -58,9 +58,8 @@ extends DynamicConfiguration[T] {
         case Success(newConfiguration)
             if Some(newConfiguration) == oldConfigurationMaybe =>
         case Success(newConfiguration) =>
-          val changed =
-            currentConfigurationReference.compareAndSet(
-              oldConfigurationMaybe, Some(newConfiguration))
+          currentConfigurationReference.compareAndSet(
+            oldConfigurationMaybe, Some(newConfiguration))
         case Failure(t) =>
           log.warn(
             "Failed to update current configuration. " +
