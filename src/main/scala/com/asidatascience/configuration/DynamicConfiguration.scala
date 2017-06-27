@@ -69,5 +69,5 @@ extends DynamicConfiguration[T] {
     timer = Some(task)
   }
 
-  override def stop(): Unit = { timer.foreach { _.cancel } }
+  override def stop: Unit = { timer.foreach { _.cancel } }
 }
