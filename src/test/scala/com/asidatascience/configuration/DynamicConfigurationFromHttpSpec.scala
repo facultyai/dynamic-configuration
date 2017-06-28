@@ -29,6 +29,7 @@ with ScalaFutures {
 
   override def afterAll(): Unit = {
     actorSystem.terminate.futureValue
+    ()
   }
 
   case class Configuration(timestamp: Long)
@@ -70,6 +71,7 @@ with ScalaFutures {
     val parser = new TestConfigurationParser {}
     withDynamicConfiguration(parser) { configuration =>
       configuration.currentConfiguration shouldEqual None
+      ()
     }
   }
 
@@ -82,6 +84,7 @@ with ScalaFutures {
           case Some(actualConfiguration) =>
             actualConfiguration shouldEqual dummyConfiguration
         }
+        ()
       }
     }
   }

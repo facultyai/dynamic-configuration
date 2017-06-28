@@ -29,6 +29,7 @@ with ScalaFutures {
 
   override def afterAll {
     actorSystem.terminate().futureValue
+    ()
   }
 
   case class Configuration(timestamp: Long)

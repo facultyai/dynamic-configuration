@@ -26,6 +26,7 @@ with Inside {
 
   override def afterAll(): Unit = {
     actorSystem.terminate().futureValue
+    ()
   }
 
   final case class Configuration(timestamp: Long)
@@ -50,6 +51,7 @@ with Inside {
       block(path)
     } finally {
       file.delete()
+      ()
     }
   }
 
@@ -66,6 +68,7 @@ with Inside {
     val parser = new TestConfigurationParser {}
     val configuration = newDynamicConfiguration(path, parser.parse)
     configuration.currentConfiguration shouldEqual None
+    ()
   }
 
   it should "register an initial configuration" in withTemporaryFile { path =>
@@ -76,6 +79,7 @@ with Inside {
       val file = new PrintWriter(path.toString)
       file.write(dummyContents)
       file.close()
+      ()
     }
 
     eventually {
@@ -84,6 +88,7 @@ with Inside {
         case Some(actualConfiguration) =>
           actualConfiguration shouldEqual dummyConfiguration
       }
+      ()
     }
   }
 
