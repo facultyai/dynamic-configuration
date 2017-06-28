@@ -27,7 +27,7 @@ with ScalaFutures {
 
   implicit val actorSystem = ActorSystem()
 
-  override def afterAll {
+  override def afterAll(): Unit = {
     actorSystem.terminate().futureValue
     ()
   }
