@@ -19,13 +19,12 @@ with Eventually
 with Inside
 with ScalaFutures {
 
-  case object IntentionalException
-  extends Exception("intentional exception")
+  case object IntentionalException extends Exception("intentional exception")
 
   override implicit val patienceConfig = PatienceConfig(
     timeout = 5.seconds, interval = 50.millis)
 
-  implicit val actorSystem = ActorSystem()
+  implicit private val actorSystem = ActorSystem()
 
   override def afterAll(): Unit = {
     actorSystem.terminate().futureValue
@@ -34,7 +33,7 @@ with ScalaFutures {
 
   case class Configuration(timestamp: Long)
 
-  def newConfiguration = Configuration(System.nanoTime)
+  private def newConfiguration = Configuration(System.nanoTime)
 
   trait TestConfigurationUpdater {
     val nHits = new AtomicInteger(0)
@@ -50,7 +49,7 @@ with ScalaFutures {
     }
   }
 
-  def newDynamicConfiguration(
+  private def newDynamicConfiguration(
     updater: => Future[Configuration]
   ): DynamicConfiguration[Configuration] =
     DynamicConfiguration[Configuration](
