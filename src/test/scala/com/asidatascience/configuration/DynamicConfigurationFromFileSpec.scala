@@ -29,7 +29,7 @@ with Inside {
     ()
   }
 
-  final case class Configuration(timestamp: Long)
+  case class Configuration(timestamp: Long)
 
   private val dummyConfiguration = Configuration(1L)
   private val dummyContents = "dummy-contents"
