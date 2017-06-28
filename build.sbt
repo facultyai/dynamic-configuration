@@ -22,7 +22,27 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-test" % "2.5.14" % "test"
 )
 
-scalacOptions ++= Seq("-feature", "-deprecation", "-Ywarn-unused-import")
+scalacOptions ++= Seq(
+  "-deprecation",
+  "-encoding", "utf-8",
+  "-feature",
+  "-unchecked",
+  "-Xcheckinit",
+  "-Xlint:_",
+  "-Yno-adapted-args",
+  "-Ypartial-unification",
+  "-Ywarn-dead-code",
+  "-Ywarn-inaccessible",
+  "-Ywarn-infer-any",
+  "-Ywarn-nullary-override",
+  "-Ywarn-nullary-unit",
+  "-Ywarn-numeric-widen",
+  "-Ywarn-unused",
+  "-Ywarn-unused-import",
+  "-Ywarn-value-discard"
+)
+
+addCompilerPlugin("org.psywerx.hairyfotr" %% "linter" % "0.1.17")
 
 publishMavenStyle := false
 
