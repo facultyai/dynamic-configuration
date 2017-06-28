@@ -116,24 +116,21 @@ with ScalaFutures {
     eventually {
       updater.nHits.get shouldEqual 1
       inside(configuration.currentConfiguration) {
-        case Some(configuration) =>
-          configuration shouldEqual firstConfiguration
+        case Some(config) => config shouldEqual firstConfiguration
       }
     }
 
     eventually {
       updater.nHits.get should (be > 1 and be < 5)
       inside(configuration.currentConfiguration) {
-        case Some(configuration) =>
-          configuration shouldEqual firstConfiguration
+        case Some(config) => config shouldEqual firstConfiguration
       }
     }
 
     eventually {
       updater.nHits.get should be > 5
       inside(configuration.currentConfiguration) {
-        case Some(configuration) =>
-          configuration shouldEqual secondConfiguration
+        case Some(config) => config shouldEqual secondConfiguration
       }
     }
 

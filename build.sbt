@@ -56,3 +56,15 @@ publishTo := {
   val prefix = if (isSnapshot.value) "snapshots" else "releases"
   Some(s3resolver.value("ASI "+prefix+" S3 bucket", s3(s"asi-$prefix-repository")) withIvyPatterns)
 }
+
+lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
+
+compileScalastyle := org.scalastyle.sbt.ScalastylePlugin.scalastyle.in(Compile).toTask("").value
+
+(compile in Compile) := ((compile in Compile) dependsOn compileScalastyle).value
+
+lazy val testCompileScalastyle = taskKey[Unit]("testCompileScalastyle")
+
+testCompileScalastyle := org.scalastyle.sbt.ScalastylePlugin.scalastyle.in(Test).toTask("").value
+
+(compile in Test) := ((compile in Test) dependsOn testCompileScalastyle).value
