@@ -11,7 +11,7 @@ import com.typesafe.scalalogging.Logger
 
 trait DynamicConfiguration[T] {
   def currentConfiguration: Option[T]
-  def stop: Unit
+  def stop(): Unit
 }
 
 object DynamicConfiguration {
@@ -69,5 +69,5 @@ extends DynamicConfiguration[T] {
     timer = Some(task)
   }
 
-  override def stop: Unit = { timer.foreach { _.cancel } }
+  override def stop(): Unit = { timer.foreach { _.cancel } }
 }
