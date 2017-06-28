@@ -19,9 +19,9 @@ object DynamicConfigurationFromS3 {
 
     DynamicConfiguration(refreshOptions) {
       Future {
-        val contents: String = s3Client.getObjectAsString(bucket, key)
-        val configurationTry = parser(contents)
-        configurationTry.get
+        s3Client.getObjectAsString(bucket, key)
+      }.flatMap { contents =>
+        Future.fromTry { parser(contents) }
       }
     }
   }
