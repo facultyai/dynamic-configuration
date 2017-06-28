@@ -16,7 +16,10 @@ object DynamicConfigurationFromFile {
 
     DynamicConfiguration(refreshOptions) {
       Future {
-        Source.fromFile(path.toString).mkString
+        val file = Source.fromFile(path.toString)
+        val contents = file.mkString
+        file.close()
+        contents
       }.flatMap { contents =>
         Future.fromTry { parser(contents) }
       }
