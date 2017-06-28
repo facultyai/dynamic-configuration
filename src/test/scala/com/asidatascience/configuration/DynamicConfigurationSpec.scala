@@ -41,7 +41,7 @@ with ScalaFutures {
     var lastConfigurationUpdate: Option[Configuration] = None
     def update: Future[Configuration] = {
       Future {
-        Thread.sleep(500) // simulate long-ish call
+        Thread.sleep(500) // scalastyle:ignore magic.number
         nHits.incrementAndGet()
         val config = newConfiguration
         lastConfigurationUpdate = Some(config)
@@ -96,7 +96,7 @@ with ScalaFutures {
     val updater = new TestConfigurationUpdater {
       override def update: Future[Configuration] =
         Future {
-          Thread.sleep(500)
+          Thread.sleep(500) // scalastyle:ignore magic.number
           nHits.incrementAndGet()
         }
         .flatMap { nHits =>

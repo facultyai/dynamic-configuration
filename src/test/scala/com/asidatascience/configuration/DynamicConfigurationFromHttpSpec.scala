@@ -57,7 +57,7 @@ with ScalaFutures {
         Action { Results.Ok(dummyContents) }
     } { implicit port =>
       WsTestClient.withClient { testClient =>
-        Thread.sleep(1000)
+        Thread.sleep(1000) // scalastyle:ignore magic.number
         val dynamicConfiguration = DynamicConfigurationFromHttp(
           testClient, "/dummy-url", RefreshOptions(100.millis, 300.millis)
         )(parser.parse)
