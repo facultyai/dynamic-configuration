@@ -1,52 +1,24 @@
 package com.asidatascience.configuration
 
-import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import scala.util.{Success, Try}
 
-import akka.actor.ActorSystem
-import akka.testkit.TestKit
-import org.scalatest._
-import org.scalatest.concurrent.{Eventually, ScalaFutures}
+import org.scalatest.concurrent.Eventually
+import org.scalatest.Inside
 import play.api.mvc._
 import play.api.routing.sird._
 import play.api.test._
 import play.core.server.Server
 
 class DynamicConfigurationFromHttpSpec
-extends TestKit(ActorSystem("dynamic-configuration-from-http-spec"))
-with FlatSpecLike
-with Matchers
+extends BaseSpec
 with Eventually
-with Inside
-with BeforeAndAfterAll
-with ScalaFutures {
+with Inside {
 
   override implicit val patienceConfig = PatienceConfig(
     timeout = 1.seconds, interval = 50.millis)
 
-  override def afterAll(): Unit = {
-    TestKit.shutdownActorSystem(system)
-  }
-
-  case class Configuration(timestamp: Long)
-
-  val dummyConfiguration = Configuration(1L)
-  val dummyContents = "dummy-contents"
-
-  trait TestConfigurationParser {
-    val nHits = new AtomicInteger(0)
-
-    def parse(contents: String): Try[Configuration] = {
-      contents shouldEqual dummyContents
-      nHits.incrementAndGet()
-      val config = dummyConfiguration
-      Success(config)
-    }
-  }
-
-  def withDynamicConfiguration(
+  private def withDynamicConfiguration(
     parser: TestConfigurationParser)(
     block: DynamicConfiguration[Configuration] => Any): Unit = {
     Server.withRouter() {
@@ -66,14 +38,14 @@ with ScalaFutures {
   }
 
   "DynamicConfigurationFromHttp" should "return None initially" in {
-    val parser = new TestConfigurationParser {}
+    val parser = new TestConfigurationParser(dummyContents)
     withDynamicConfiguration(parser) { configuration =>
       configuration.currentConfiguration shouldEqual None
     }
   }
 
   it should "register an initial configuration" in {
-    val parser = new TestConfigurationParser {}
+    val parser = new TestConfigurationParser(dummyContents)
     withDynamicConfiguration(parser) { configuration =>
       eventually {
         parser.nHits.get should be > 0
