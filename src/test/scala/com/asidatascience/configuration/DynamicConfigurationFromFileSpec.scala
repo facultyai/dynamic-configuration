@@ -79,7 +79,6 @@ with Inside {
       val file = new PrintWriter(path.toString)
       file.write(dummyContents)
       file.close()
-      ()
     }
 
     eventually {
