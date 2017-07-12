@@ -1,21 +1,22 @@
 package com.asidatascience.configuration
 
 import java.util.concurrent.atomic.AtomicInteger
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.util.{Success, Try}
 
 import akka.actor.ActorSystem
+import akka.testkit.TestKit
+import org.scalatest._
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers}
 import play.api.mvc._
 import play.api.routing.sird._
 import play.api.test._
 import play.core.server.Server
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.util.{Success, Try}
-
 class DynamicConfigurationFromHttpSpec
-extends FlatSpec
+extends TestKit(ActorSystem("dynamic-configuration-from-http-spec"))
+with FlatSpecLike
 with Matchers
 with Eventually
 with Inside
@@ -25,11 +26,8 @@ with ScalaFutures {
   override implicit val patienceConfig = PatienceConfig(
     timeout = 1.seconds, interval = 50.millis)
 
-  implicit val actorSystem = ActorSystem()
-
   override def afterAll(): Unit = {
-    actorSystem.terminate.futureValue
-    ()
+    TestKit.shutdownActorSystem(system)
   }
 
   case class Configuration(timestamp: Long)

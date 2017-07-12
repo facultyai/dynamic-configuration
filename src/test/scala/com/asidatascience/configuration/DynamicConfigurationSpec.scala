@@ -1,18 +1,18 @@
 package com.asidatascience.configuration
 
+import java.util.concurrent.atomic.AtomicInteger
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
+
+import akka.actor.ActorSystem
+import akka.testkit.TestKit
 import org.scalatest._
 import org.scalatest.concurrent._
 
-import akka.actor.ActorSystem
-
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-
-import java.util.concurrent.atomic.AtomicInteger
-
 class DynamicConfigurationSpec
-extends FlatSpec
+extends TestKit(ActorSystem("dynamic-configuration-spec"))
+with FlatSpecLike
 with Matchers
 with BeforeAndAfterAll
 with Eventually
@@ -24,11 +24,8 @@ with ScalaFutures {
   override implicit val patienceConfig = PatienceConfig(
     timeout = 5.seconds, interval = 50.millis)
 
-  implicit private val actorSystem = ActorSystem()
-
   override def afterAll(): Unit = {
-    actorSystem.terminate().futureValue
-    ()
+    TestKit.shutdownActorSystem(system)
   }
 
   case class Configuration(timestamp: Long)
