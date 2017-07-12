@@ -50,7 +50,7 @@ with Inside {
     try {
       block(path)
     } finally {
-      file.delete()
+      file.delete() shouldEqual true
       ()
     }
   }
