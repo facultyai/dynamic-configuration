@@ -48,7 +48,7 @@ with ScalaFutures {
 
   def withDynamicConfiguration(
     parser: TestConfigurationParser)(
-    block: DynamicConfiguration[Configuration] => Unit ): Unit = {
+    block: DynamicConfiguration[Configuration] => Assertion): Unit = {
     Server.withRouter() {
       case GET(p"/dummy-url") =>
         parser.nHits.incrementAndGet()
@@ -69,7 +69,6 @@ with ScalaFutures {
     val parser = new TestConfigurationParser {}
     withDynamicConfiguration(parser) { configuration =>
       configuration.currentConfiguration shouldEqual None
-      ()
     }
   }
 
@@ -82,7 +81,6 @@ with ScalaFutures {
           case Some(actualConfiguration) =>
             actualConfiguration shouldEqual dummyConfiguration
         }
-        ()
       }
     }
   }

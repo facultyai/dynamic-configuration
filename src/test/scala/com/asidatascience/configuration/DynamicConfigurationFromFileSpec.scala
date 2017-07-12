@@ -43,15 +43,11 @@ with Inside {
     }
   }
 
-  private def withTemporaryFile(block: Path => Unit): Unit = {
+  private def withTemporaryFile(block: Path => Assertion): Assertion = {
     val file = File.createTempFile("dynamic-configuration", ".tmp")
     val path = Paths.get(file.getAbsolutePath)
-    try {
-      block(path)
-    } finally {
-      file.delete() shouldEqual true
-      ()
-    }
+    Try { block(path) }
+    file.delete() shouldEqual true
   }
 
   private def newDynamicConfiguration(
@@ -67,7 +63,6 @@ with Inside {
     val parser = new TestConfigurationParser {}
     val configuration = newDynamicConfiguration(path, parser.parse)
     configuration.currentConfiguration shouldEqual None
-    ()
   }
 
   it should "register an initial configuration" in withTemporaryFile { path =>
@@ -86,7 +81,6 @@ with Inside {
         case Some(actualConfiguration) =>
           actualConfiguration shouldEqual dummyConfiguration
       }
-      ()
     }
   }
 
