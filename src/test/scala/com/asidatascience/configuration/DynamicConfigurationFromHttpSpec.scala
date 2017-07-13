@@ -48,7 +48,7 @@ with ScalaFutures {
 
   def withDynamicConfiguration(
     parser: TestConfigurationParser)(
-    block: DynamicConfiguration[Configuration] => Assertion): Unit = {
+    block: DynamicConfiguration[Configuration] => Any): Unit = {
     Server.withRouter() {
       case GET(p"/dummy-url") =>
         parser.nHits.incrementAndGet()

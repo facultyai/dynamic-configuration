@@ -43,7 +43,7 @@ with Inside {
     }
   }
 
-  private def withTemporaryFile(block: Path => Assertion): Assertion = {
+  private def withTemporaryFile(block: Path => Any): Any = {
     val file = File.createTempFile("dynamic-configuration", ".tmp")
     val path = Paths.get(file.getAbsolutePath)
     Try { block(path) }
