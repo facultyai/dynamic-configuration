@@ -3,16 +3,18 @@ package com.asidatascience.configuration
 import java.io.{File, PrintWriter}
 import java.nio.file.{Path, Paths}
 import java.util.concurrent.atomic.AtomicInteger
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 import scala.util.{Success, Try}
 
 import akka.actor.ActorSystem
+import akka.testkit.TestKit
+import org.scalatest._
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers}
 
 class DynamicConfigurationFromFileSpec
-extends FlatSpec
+extends TestKit(ActorSystem("dynamic-configuration-from-file-spec"))
+with FlatSpecLike
 with Matchers
 with BeforeAndAfterAll
 with ScalaFutures
@@ -22,13 +24,11 @@ with Inside {
   override implicit val patienceConfig = PatienceConfig(
     timeout = 5.seconds, interval = 50.millis)
 
-  implicit private val actorSystem = ActorSystem()
-
   override def afterAll(): Unit = {
-    actorSystem.terminate().futureValue
+    TestKit.shutdownActorSystem(system)
   }
 
-  final case class Configuration(timestamp: Long)
+  case class Configuration(timestamp: Long)
 
   private val dummyConfiguration = Configuration(1L)
   private val dummyContents = "dummy-contents"
@@ -43,14 +43,11 @@ with Inside {
     }
   }
 
-  private def withTemporaryFile(block: Path => Unit): Unit = {
+  private def withTemporaryFile(block: Path => Any): Any = {
     val file = File.createTempFile("dynamic-configuration", ".tmp")
     val path = Paths.get(file.getAbsolutePath)
-    try {
-      block(path)
-    } finally {
-      file.delete()
-    }
+    Try { block(path) }
+    file.delete() shouldEqual true
   }
 
   private def newDynamicConfiguration(
@@ -72,7 +69,7 @@ with Inside {
     val parser = new TestConfigurationParser {}
     val configuration = newDynamicConfiguration(path, parser.parse)
 
-    actorSystem.scheduler.scheduleOnce(1.second) {
+    system.scheduler.scheduleOnce(1.second) {
       val file = new PrintWriter(path.toString)
       file.write(dummyContents)
       file.close()

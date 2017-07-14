@@ -1,46 +1,43 @@
 package com.asidatascience.configuration
 
+import java.util.concurrent.atomic.AtomicInteger
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
+
+import akka.actor.ActorSystem
+import akka.testkit.TestKit
 import org.scalatest._
 import org.scalatest.concurrent._
 
-import akka.actor.ActorSystem
-
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-
-import java.util.concurrent.atomic.AtomicInteger
-
 class DynamicConfigurationSpec
-extends FlatSpec
+extends TestKit(ActorSystem("dynamic-configuration-spec"))
+with FlatSpecLike
 with Matchers
 with BeforeAndAfterAll
 with Eventually
 with Inside
 with ScalaFutures {
 
-  case object IntentionalException
-  extends Exception("intentional exception")
+  case object IntentionalException extends Exception("intentional exception")
 
   override implicit val patienceConfig = PatienceConfig(
     timeout = 5.seconds, interval = 50.millis)
 
-  implicit val actorSystem = ActorSystem()
-
-  override def afterAll {
-    actorSystem.terminate().futureValue
+  override def afterAll(): Unit = {
+    TestKit.shutdownActorSystem(system)
   }
 
   case class Configuration(timestamp: Long)
 
-  def newConfiguration = Configuration(System.nanoTime)
+  private def newConfiguration = Configuration(System.nanoTime)
 
   trait TestConfigurationUpdater {
     val nHits = new AtomicInteger(0)
     var lastConfigurationUpdate: Option[Configuration] = None
     def update: Future[Configuration] = {
       Future {
-        Thread.sleep(500) // simulate long-ish call
+        Thread.sleep(500) // scalastyle:ignore magic.number
         nHits.incrementAndGet()
         val config = newConfiguration
         lastConfigurationUpdate = Some(config)
@@ -49,7 +46,7 @@ with ScalaFutures {
     }
   }
 
-  def newDynamicConfiguration(
+  private def newDynamicConfiguration(
     updater: => Future[Configuration]
   ): DynamicConfiguration[Configuration] =
     DynamicConfiguration[Configuration](
@@ -95,7 +92,7 @@ with ScalaFutures {
     val updater = new TestConfigurationUpdater {
       override def update: Future[Configuration] =
         Future {
-          Thread.sleep(500)
+          Thread.sleep(500) // scalastyle:ignore magic.number
           nHits.incrementAndGet()
         }
         .flatMap { nHits =>

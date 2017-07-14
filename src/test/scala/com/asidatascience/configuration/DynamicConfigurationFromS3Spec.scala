@@ -1,24 +1,21 @@
 package com.asidatascience.configuration
 
+import java.util.concurrent.atomic.AtomicInteger
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.util.{Success, Try}
+
+import akka.actor.ActorSystem
+import akka.testkit.TestKit
+import com.amazonaws.services.s3.AmazonS3
+import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.concurrent._
 import org.scalatest.mockito.MockitoSugar
 
-import org.mockito.Mockito.when
-
-import scala.util.{Try, Success}
-
-import akka.actor.ActorSystem
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-
-import com.amazonaws.services.s3.AmazonS3
-
-import java.util.concurrent.atomic.AtomicInteger
-
 class DynamicConfigurationFromS3Spec
-extends FlatSpec
+extends TestKit(ActorSystem("dynamic-configuration-from-s3-spec"))
+with FlatSpecLike
 with Matchers
 with BeforeAndAfterAll
 with Eventually
@@ -29,10 +26,8 @@ with ScalaFutures {
   override implicit val patienceConfig = PatienceConfig(
     timeout = 5.seconds, interval = 50.millis)
 
-  implicit val actorSystem = ActorSystem()
-
-  override def afterAll {
-    actorSystem.terminate().futureValue
+  override def afterAll(): Unit = {
+    TestKit.shutdownActorSystem(system)
   }
 
   case class Configuration(timestamp: Long)

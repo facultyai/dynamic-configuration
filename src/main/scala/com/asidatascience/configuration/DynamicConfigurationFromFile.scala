@@ -12,7 +12,7 @@ object DynamicConfigurationFromFile {
     path: Path,
     refreshOptions: RefreshOptions = RefreshOptions()
   )(parser: String => Try[T])
-  (implicit system: ActorSystem, context: ExecutionContext) = {
+  (implicit system: ActorSystem, context: ExecutionContext): DynamicConfiguration[T] = {
 
     DynamicConfiguration(refreshOptions) {
       Future {
