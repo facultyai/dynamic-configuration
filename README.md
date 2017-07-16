@@ -4,7 +4,8 @@
 
 This repository provides tools for setting up configuration that refreshes at
 particular intervals. It assumes that the current configuration lives in a file
-on Amazon S3. It tries to refresh the configuration at regular intervals.
+on the local file system, on Amazon S3, or on a web server that speaks HTTP. It
+tries to refresh the configuration at regular intervals.
 
 Assume that, for instance, you want to create a class to frozzle some widgets.
 This class needs access to the current model of the widget to be frozzled. To
