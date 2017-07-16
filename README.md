@@ -84,7 +84,10 @@ class WidgetFrozzler(
 }
 ```
 
-This is turned into a fully functional example in the `/examples/simple` directory.
+This is turned into a fully functional example in the
+[`/examples/simple`][example] directory.
+
+[example]: https://github.com/ASIDataScience/dynamic-configuration/tree/master/examples/simple
 
 ## About ASI Data Science
 
