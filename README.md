@@ -26,7 +26,9 @@ below). Then, call `DynamicConfigurationFromS3`, passing in the bucket and key
 at which your configuration file is located and a method for converting from the
 string content of your configuration to a `Try[FrozzlerConfiguration]`.
 
-`DynamicConfigurationFromS3` will return a `DynamicConfiguration` object with a `currentConfiguration` method. This returns an option with either the current configuration, or `None` if the configuration is not loaded yet.
+`DynamicConfigurationFromS3` will return a `DynamicConfiguration` object with a
+`currentConfiguration` method. This returns an option with either the current
+configuration, or `None` if the configuration is not loaded yet.
 
 ```scala
 
