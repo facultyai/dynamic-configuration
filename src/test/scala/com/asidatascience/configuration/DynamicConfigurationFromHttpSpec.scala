@@ -11,16 +11,15 @@ import play.api.test._
 import play.core.server.Server
 
 class DynamicConfigurationFromHttpSpec
-extends BaseSpec
-with Eventually
-with Inside {
+    extends BaseSpec
+    with Eventually
+    with Inside {
 
-  override implicit val patienceConfig = PatienceConfig(
-    timeout = 1.seconds, interval = 50.millis)
+  override implicit val patienceConfig =
+    PatienceConfig(timeout = 1.seconds, interval = 50.millis)
 
-  private def withDynamicConfiguration(
-    parser: TestConfigurationParser)(
-    block: DynamicConfiguration[Configuration] => Any): Unit = {
+  private def withDynamicConfiguration(parser: TestConfigurationParser)(
+      block: DynamicConfiguration[Configuration] => Any): Unit =
     Server.withRouter() {
       case GET(p"/dummy-url") =>
         parser.nHits.incrementAndGet()
@@ -29,13 +28,14 @@ with Inside {
       WsTestClient.withClient { testClient =>
         Thread.sleep(1000) // scalastyle:ignore magic.number
         val dynamicConfiguration = DynamicConfigurationFromHttp(
-          testClient, "/dummy-url", RefreshOptions(100.millis, 300.millis)
+          testClient,
+          "/dummy-url",
+          RefreshOptions(100.millis, 300.millis)
         )(parser.parse)
         block(dynamicConfiguration)
         testClient.close()
       }
     }
-  }
 
   "DynamicConfigurationFromHttp" should "return None initially" in {
     val parser = new TestConfigurationParser(dummyContents)

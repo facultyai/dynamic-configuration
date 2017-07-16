@@ -10,12 +10,12 @@ final case class HttpException(msg: String) extends Exception(msg)
 
 object DynamicConfigurationFromHttp {
   def apply[T](
-    wsClient: WSClient,
-    url: String,
-    refreshOptions: RefreshOptions = RefreshOptions()
-  )(parser: String => Try[T])
-  (implicit system: ActorSystem, context: ExecutionContext): DynamicConfiguration[T] = {
-
+      wsClient: WSClient,
+      url: String,
+      refreshOptions: RefreshOptions = RefreshOptions()
+  )(parser: String => Try[T])(
+      implicit system: ActorSystem,
+      context: ExecutionContext): DynamicConfiguration[T] =
     DynamicConfiguration(refreshOptions) {
       val responseFuture = wsClient
         .url(url)
@@ -25,11 +25,11 @@ object DynamicConfigurationFromHttp {
         if (response.status == 200) {
           Future.fromTry(parser(response.body))
         } else {
-          Future.failed(HttpException(
-            s"Request failed with status code ${response.status}"))
+          Future.failed(
+            HttpException(
+              s"Request failed with status code ${response.status}"))
         }
       }
     }
 
-  }
 }

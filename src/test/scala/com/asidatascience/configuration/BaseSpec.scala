@@ -10,18 +10,17 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
 
 abstract class BaseSpec
-extends TestKit(ActorSystem("base-spec"))
-with FlatSpecLike
-with Matchers
-with BeforeAndAfterAll
-with ScalaFutures {
+    extends TestKit(ActorSystem("base-spec"))
+    with FlatSpecLike
+    with Matchers
+    with BeforeAndAfterAll
+    with ScalaFutures {
 
-  override implicit val patienceConfig = PatienceConfig(
-    timeout = 5.seconds, interval = 50.millis)
+  override implicit val patienceConfig =
+    PatienceConfig(timeout = 5.seconds, interval = 50.millis)
 
-  override def afterAll(): Unit = {
+  override def afterAll(): Unit =
     TestKit.shutdownActorSystem(system)
-  }
 
   case class Configuration(timestamp: Long)
 

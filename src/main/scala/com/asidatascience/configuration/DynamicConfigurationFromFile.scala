@@ -9,11 +9,11 @@ import akka.actor.ActorSystem
 
 object DynamicConfigurationFromFile {
   def apply[T](
-    path: Path,
-    refreshOptions: RefreshOptions = RefreshOptions()
-  )(parser: String => Try[T])
-  (implicit system: ActorSystem, context: ExecutionContext): DynamicConfiguration[T] = {
-
+      path: Path,
+      refreshOptions: RefreshOptions = RefreshOptions()
+  )(parser: String => Try[T])(
+      implicit system: ActorSystem,
+      context: ExecutionContext): DynamicConfiguration[T] =
     DynamicConfiguration(refreshOptions) {
       Future {
         val file = Source.fromFile(path.toString)
@@ -24,6 +24,5 @@ object DynamicConfigurationFromFile {
         Future.fromTry { parser(contents) }
       }
     }
-  }
 
 }

@@ -2,8 +2,8 @@ package com.asidatascience.configuration
 
 import akka.actor.{ActorSystem, Cancellable}
 
-import scala.util.{Success, Failure}
-import scala.concurrent.{Future, ExecutionContext}
+import scala.util.{Failure, Success}
+import scala.concurrent.{ExecutionContext, Future}
 
 import java.util.concurrent.atomic.AtomicReference
 
@@ -15,10 +15,9 @@ trait DynamicConfiguration[T] {
 }
 
 object DynamicConfiguration {
-  def apply[T](refreshOptions: RefreshOptions)
-    (updater: => Future[T])
-    (implicit system: ActorSystem, context: ExecutionContext)
-  :DynamicConfiguration[T] = {
+  def apply[T](refreshOptions: RefreshOptions)(updater: => Future[T])(
+      implicit system: ActorSystem,
+      context: ExecutionContext): DynamicConfiguration[T] = {
     val helper = new DynamicConfigurationImpl[T] {
       override def options: RefreshOptions = refreshOptions
       override def updateConfiguration: Future[T] = updater
@@ -29,12 +28,13 @@ object DynamicConfiguration {
     helper
   }
 
-  def apply[T](updater: => Future[T])(implicit system: ActorSystem, context: ExecutionContext)
-  : DynamicConfiguration[T] = apply(RefreshOptions())(updater)(system, context)
+  def apply[T](updater: => Future[T])(
+      implicit system: ActorSystem,
+      context: ExecutionContext): DynamicConfiguration[T] =
+    apply(RefreshOptions())(updater)(system, context)
 }
 
-trait DynamicConfigurationImpl[T]
-extends DynamicConfiguration[T] {
+trait DynamicConfigurationImpl[T] extends DynamicConfiguration[T] {
 
   def options: RefreshOptions
   def updateConfiguration: Future[T]
@@ -43,10 +43,11 @@ extends DynamicConfiguration[T] {
 
   private val log = Logger(classOf[DynamicConfiguration[T]])
 
-  override def currentConfiguration: Option[T] = currentConfigurationReference.get()
+  override def currentConfiguration: Option[T] =
+    currentConfigurationReference.get()
 
-  private val currentConfigurationReference
-  : AtomicReference[Option[T]] = new AtomicReference(None)
+  private val currentConfigurationReference: AtomicReference[Option[T]] =
+    new AtomicReference(None)
 
   var timer: Option[Cancellable] = None
 
@@ -58,16 +59,16 @@ extends DynamicConfiguration[T] {
         case Success(newConfiguration)
             if oldConfigurationMaybe.contains(newConfiguration) =>
         case Success(newConfiguration) =>
-          currentConfigurationReference.compareAndSet(
-            oldConfigurationMaybe, Some(newConfiguration))
+          currentConfigurationReference.compareAndSet(oldConfigurationMaybe,
+                                                      Some(newConfiguration))
         case Failure(t) =>
-          log.warn(
-            "Failed to update current configuration. " +
-            "Falling back to previous version.", t)
+          log.warn("Failed to update current configuration. " +
+                     "Falling back to previous version.",
+                   t)
       }
     }
     timer = Some(task)
   }
 
-  override def stop(): Unit = { timer.foreach { _.cancel } }
+  override def stop(): Unit = timer.foreach { _.cancel }
 }

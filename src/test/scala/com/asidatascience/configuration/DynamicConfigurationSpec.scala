@@ -8,10 +8,7 @@ import scala.concurrent.duration._
 import org.scalatest._
 import org.scalatest.concurrent._
 
-class DynamicConfigurationSpec
-extends BaseSpec
-with Eventually
-with Inside {
+class DynamicConfigurationSpec extends BaseSpec with Eventually with Inside {
 
   case object IntentionalException extends Exception("intentional exception")
 
@@ -20,7 +17,7 @@ with Inside {
   trait TestConfigurationUpdater {
     val nHits = new AtomicInteger(0)
     var lastConfigurationUpdate: Option[Configuration] = None
-    def update: Future[Configuration] = {
+    def update: Future[Configuration] =
       Future {
         Thread.sleep(500) // scalastyle:ignore magic.number
         nHits.incrementAndGet()
@@ -28,11 +25,10 @@ with Inside {
         lastConfigurationUpdate = Some(config)
         config
       }
-    }
   }
 
   private def newDynamicConfiguration(
-    updater: => Future[Configuration]
+      updater: => Future[Configuration]
   ): DynamicConfiguration[Configuration] =
     DynamicConfiguration[Configuration](
       RefreshOptions(500.millis, 1.seconds)
@@ -51,7 +47,7 @@ with Inside {
 
     eventually {
       updater.nHits.get shouldEqual 1
-      inside (configuration.currentConfiguration) {
+      inside(configuration.currentConfiguration) {
         case Some(actualConfiguration) =>
           actualConfiguration shouldEqual updater.lastConfigurationUpdate.get
       }
@@ -79,15 +75,12 @@ with Inside {
         Future {
           Thread.sleep(500) // scalastyle:ignore magic.number
           nHits.incrementAndGet()
-        }
-        .flatMap { nHits =>
+        }.flatMap { nHits =>
           if (nHits == 1) {
             Future.successful(firstConfiguration)
-          }
-          else if (nHits > 1 && nHits < 5) {
+          } else if (nHits > 1 && nHits < 5) {
             Future.failed(IntentionalException)
-          }
-          else {
+          } else {
             Future.successful(secondConfiguration)
           }
         }
