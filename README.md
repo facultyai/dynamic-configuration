@@ -31,7 +31,6 @@ string content of your configuration to a `Try[FrozzlerConfiguration]`.
 configuration, or `None` if the configuration is not loaded yet.
 
 ```scala
-
 import com.asidatascience.configuration.{DynamicConfigurationFromS3, RefreshOptions}
 
 import scala.util.Try
@@ -42,7 +41,7 @@ import scala.concurrent.duration._
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 
-case class FrozzlerConfiguration(model: String)
+final case class FrozzlerConfiguration(model: String)
 
 class WidgetFrozzler(
   configurationS3Bucket: String,
