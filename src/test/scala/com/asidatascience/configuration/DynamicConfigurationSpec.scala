@@ -5,30 +5,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-import akka.actor.ActorSystem
-import akka.testkit.TestKit
 import org.scalatest._
 import org.scalatest.concurrent._
 
 class DynamicConfigurationSpec
-extends TestKit(ActorSystem("dynamic-configuration-spec"))
-with FlatSpecLike
-with Matchers
-with BeforeAndAfterAll
+extends BaseSpec
 with Eventually
-with Inside
-with ScalaFutures {
+with Inside {
 
   case object IntentionalException extends Exception("intentional exception")
-
-  override implicit val patienceConfig = PatienceConfig(
-    timeout = 5.seconds, interval = 50.millis)
-
-  override def afterAll(): Unit = {
-    TestKit.shutdownActorSystem(system)
-  }
-
-  case class Configuration(timestamp: Long)
 
   private def newConfiguration = Configuration(System.nanoTime)
 
