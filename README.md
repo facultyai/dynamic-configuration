@@ -78,7 +78,7 @@ class WidgetFrozzler(
         val currentModel = configuration.model
         println(s"Creating widget with model $currentModel")
       case None =>
-        println(s"Configuration not ready")
+        println("Configuration not ready")
     }
   }
 }
