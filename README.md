@@ -4,7 +4,8 @@
 
 This repository provides tools for setting up configuration that refreshes at
 particular intervals. It assumes that the current configuration lives in a file
-on Amazon S3. It tries to refresh the configuration at regular intervals.
+on the local file system, on Amazon S3, or on a web server that speaks HTTP. It
+tries to refresh the configuration at regular intervals.
 
 Assume that, for instance, you want to create a class to frozzle some widgets.
 This class needs access to the current model of the widget to be frozzled. To
@@ -26,10 +27,11 @@ below). Then, call `DynamicConfigurationFromS3`, passing in the bucket and key
 at which your configuration file is located and a method for converting from the
 string content of your configuration to a `Try[FrozzlerConfiguration]`.
 
-`DynamicConfigurationFromS3` will return a `DynamicConfiguration` object with a `currentConfiguration` method. This returns an option with either the current configuration, or `None` if the configuration is not loaded yet.
+`DynamicConfigurationFromS3` will return a `DynamicConfiguration` object with a
+`currentConfiguration` method. This returns an option with either the current
+configuration, or `None` if the configuration is not loaded yet.
 
 ```scala
-
 import com.asidatascience.configuration.{DynamicConfigurationFromS3, RefreshOptions}
 
 import scala.util.Try
@@ -40,7 +42,7 @@ import scala.concurrent.duration._
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 
-case class FrozzlerConfiguration(model: String)
+final case class FrozzlerConfiguration(model: String)
 
 class WidgetFrozzler(
   configurationS3Bucket: String,
@@ -77,10 +79,23 @@ class WidgetFrozzler(
         val currentModel = configuration.model
         println(s"Creating widget with model $currentModel")
       case None =>
-        println(s"Configuration not ready")
+        println("Configuration not ready")
     }
   }
 }
 ```
 
-This is turned into a fully functional example in the `/examples/simple` directory.
+This is turned into a fully functional example in the
+[`/examples/simple`][example] directory.
+
+[example]: https://github.com/ASIDataScience/dynamic-configuration/tree/master/examples/simple
+
+## About ASI Data Science
+
+[![ASI Data Science](https://cloud.githubusercontent.com/assets/5845679/19309499/140ca760-907d-11e6-9234-4601a6a516ca.png)][ASI Data Science]
+
+dynamic-configuration is maintained by [ASI Data Science]. We empower
+organisations to become more data-driven by providing first class software,
+skills, and advisory solutions.
+
+[ASI Data Science]: https://www.asidatascience.com/
