@@ -6,4 +6,6 @@ jdk:
   - oraclejdk8
   - openjdk8
 test:
+  - sbt scalafmt::test
+  - sbt test:scalafmt::test
   - sbt ++$TRAVIS_SCALA_VERSION test
