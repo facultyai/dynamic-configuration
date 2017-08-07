@@ -7,7 +7,7 @@ import scala.concurrent.{Future, ExecutionContext}
 
 import java.util.concurrent.atomic.AtomicReference
 
-import com.typesafe.scalalogging.Logger
+import play.api.Logger
 
 trait DynamicConfiguration[T] {
   def currentConfiguration: Option[T]
