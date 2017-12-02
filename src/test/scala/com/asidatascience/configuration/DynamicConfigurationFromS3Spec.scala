@@ -11,10 +11,10 @@ import org.scalatest.concurrent._
 import org.scalatest.mockito.MockitoSugar
 
 class DynamicConfigurationFromS3Spec
-extends BaseSpec
-with Eventually
-with Inside
-with MockitoSugar {
+    extends BaseSpec
+    with Eventually
+    with Inside
+    with MockitoSugar {
 
   private val dummyBucket = "test-bucket"
   private val dummyKey = "test-key"
@@ -24,7 +24,7 @@ with MockitoSugar {
     .thenReturn(dummyContents)
 
   def newDynamicConfiguration(
-    parse: String => Try[Configuration]
+      parse: String => Try[Configuration]
   ): DynamicConfiguration[Configuration] =
     DynamicConfigurationFromS3(
       mockS3Client,
@@ -46,7 +46,7 @@ with MockitoSugar {
 
     eventually {
       parser.nHits.get shouldEqual 1
-      inside (configuration.currentConfiguration) {
+      inside(configuration.currentConfiguration) {
         case Some(actualConfiguration) =>
           actualConfiguration shouldEqual dummyConfiguration
       }

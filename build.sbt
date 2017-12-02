@@ -56,6 +56,12 @@ publishTo := {
   Some(s3resolver.value("ASI "+prefix+" S3 bucket", s3(s"asi-$prefix-repository")) withIvyPatterns)
 }
 
+scalafmtTestOnCompile in Compile := true
+scalafmtTestOnCompile in Test := true
+
+scalafmtFailTest in Compile := false
+scalafmtFailTest in Test := false
+
 lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
 
 compileScalastyle := org.scalastyle.sbt.ScalastylePlugin.scalastyle.in(Compile).toTask("").value

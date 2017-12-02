@@ -10,9 +10,9 @@ import org.scalatest.concurrent.Eventually
 import org.scalatest.Inside
 
 class DynamicConfigurationFromFileSpec
-extends BaseSpec
-with Eventually
-with Inside {
+    extends BaseSpec
+    with Eventually
+    with Inside {
 
   private def withTemporaryFile(block: Path => Any): Any = {
     val file = File.createTempFile("dynamic-configuration", ".tmp")
@@ -22,7 +22,8 @@ with Inside {
   }
 
   private def newDynamicConfiguration(
-    path: Path, parse: String => Try[Configuration]
+      path: Path,
+      parse: String => Try[Configuration]
   ): DynamicConfiguration[Configuration] =
     DynamicConfigurationFromFile(
       path,
@@ -30,11 +31,11 @@ with Inside {
     )(parse)
 
   "DynamicConfigurationFromFile" should "return None initially" in
-  withTemporaryFile { path =>
-    val parser = new TestConfigurationParser(dummyContents)
-    val configuration = newDynamicConfiguration(path, parser.parse)
-    configuration.currentConfiguration shouldEqual None
-  }
+    withTemporaryFile { path =>
+      val parser = new TestConfigurationParser(dummyContents)
+      val configuration = newDynamicConfiguration(path, parser.parse)
+      configuration.currentConfiguration shouldEqual None
+    }
 
   it should "register an initial configuration" in withTemporaryFile { path =>
     val parser = new TestConfigurationParser(dummyContents)
@@ -48,7 +49,7 @@ with Inside {
 
     eventually {
       parser.nHits.get shouldEqual 1
-      inside (configuration.currentConfiguration) {
+      inside(configuration.currentConfiguration) {
         case Some(actualConfiguration) =>
           actualConfiguration shouldEqual dummyConfiguration
       }
