@@ -56,11 +56,13 @@ trait DynamicConfigurationImpl[T] extends DynamicConfiguration[T] {
       updateConfiguration.onComplete {
         case Success(newConfiguration)
             if oldConfigurationMaybe.contains(newConfiguration) =>
+          log.debug("Dynamic configuration unchanged from current version.")
         case Success(newConfiguration) =>
           currentConfigurationReference.compareAndSet(oldConfigurationMaybe,
                                                       Some(newConfiguration))
+          log.info("Dynamic configuration updated with new version.")
         case Failure(t) =>
-          log.warn("Failed to update current configuration. " +
+          log.warn("Failed to update dynamic configuration. " +
                      "Falling back to previous version.",
                    t)
       }
