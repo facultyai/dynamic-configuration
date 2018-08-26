@@ -1,10 +1,10 @@
 package com.asidatascience.configuration
 
-import akka.actor.ActorSystem
-import play.api.libs.ws.WSClient
-
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
+
+import akka.actor.ActorSystem
+import play.api.libs.ws.WSClient
 
 final case class HttpException(msg: String) extends Exception(msg)
 
