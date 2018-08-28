@@ -1,12 +1,10 @@
 package com.asidatascience.configuration
 
-import akka.actor.{ActorSystem, Cancellable}
-
-import scala.util.{Failure, Success}
-import scala.concurrent.{ExecutionContext, Future}
-
 import java.util.concurrent.atomic.AtomicReference
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
+import akka.actor.{ActorSystem, Cancellable}
 import play.api.Logger
 
 trait DynamicConfiguration[T] {

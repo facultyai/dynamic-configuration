@@ -1,4 +1,3 @@
-
 name := "dynamic-configuration-simple-example"
 
 scalaVersion := "2.11.8"

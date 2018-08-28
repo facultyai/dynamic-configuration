@@ -3,8 +3,8 @@ package com.asidatascience.configuration
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
-import org.scalatest.concurrent.Eventually
 import org.scalatest.Inside
+import org.scalatest.concurrent.Eventually
 import play.api.mvc._
 import play.api.routing.sird._
 import play.api.test._

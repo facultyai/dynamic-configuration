@@ -1,11 +1,9 @@
 package com.asidatascience.configuration
 
 import scala.concurrent.{ExecutionContext, Future}
-
 import scala.util.Try
 
 import akka.actor.ActorSystem
-
 import com.amazonaws.services.s3.AmazonS3
 
 object DynamicConfigurationFromS3 {

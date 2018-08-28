@@ -6,8 +6,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.util.Try
 
-import org.scalatest.concurrent.Eventually
 import org.scalatest.Inside
+import org.scalatest.concurrent.Eventually
 
 class DynamicConfigurationFromFileSpec
     extends BaseSpec
