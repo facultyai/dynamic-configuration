@@ -16,7 +16,7 @@ class DynamicConfigurationFromHttpSpec
     with Inside {
 
   override implicit val patienceConfig =
-    PatienceConfig(timeout = 1.seconds, interval = 50.millis)
+    PatienceConfig(timeout = 2.seconds, interval = 50.millis)
 
   private def withDynamicConfiguration(parser: TestConfigurationParser)(
       block: DynamicConfiguration[Configuration] => Any): Unit =

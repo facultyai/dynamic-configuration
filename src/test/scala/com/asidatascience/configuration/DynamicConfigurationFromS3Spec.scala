@@ -30,7 +30,7 @@ class DynamicConfigurationFromS3Spec
       mockS3Client,
       dummyBucket,
       dummyKey,
-      RefreshOptions(100.millis, 300.millis)
+      RefreshOptions(100.millis, 1000.millis)
     )(parse)
 
   "DynamicConfigurationFromS3" should "return None initially" in {
