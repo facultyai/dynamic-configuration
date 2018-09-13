@@ -25,12 +25,12 @@ class DynamicConfigurationFromFileSpec
       path: Path,
       parse: String => Try[Configuration]
   ): DynamicConfiguration[Configuration] =
-    DynamicConfigurationFromFile(
+    DynamicConfiguration.fromFile(
       path,
       RefreshOptions(100.millis, 300.millis)
     )(parse)
 
-  "DynamicConfigurationFromFile" should "return None initially" in
+  "DynamicConfiguration from file" should "return None initially" in
     withTemporaryFile { path =>
       val parser = new TestConfigurationParser(dummyContents)
       val configuration = newDynamicConfiguration(path, parser.parse)

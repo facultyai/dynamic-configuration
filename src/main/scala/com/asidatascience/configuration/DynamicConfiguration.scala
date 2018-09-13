@@ -1,14 +1,14 @@
 package com.asidatascience.configuration
 
-import akka.actor.{ActorSystem, Cancellable}
-import akka.event.Logging
-
-import scala.util.{Failure, Success}
-import scala.concurrent.{ExecutionContext, Future}
-
+import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import scala.io.Source
+import scala.util.{Failure, Success, Try}
+
+import akka.actor.{ActorSystem, Cancellable}
+import akka.event.Logging
+import com.amazonaws.services.s3.AmazonS3
 
 trait DynamicConfiguration[T] {
   def currentConfiguration: Option[T]
@@ -33,6 +33,36 @@ object DynamicConfiguration {
       implicit system: ActorSystem,
       context: ExecutionContext): DynamicConfiguration[T] =
     apply(RefreshOptions())(updater)(system, context)
+
+  def fromFile[T](path: Path,
+                  refreshOptions: RefreshOptions = RefreshOptions())(
+      parser: String => Try[T])(
+      implicit system: ActorSystem,
+      context: ExecutionContext): DynamicConfiguration[T] =
+    DynamicConfiguration(refreshOptions) {
+      Future {
+        val file = Source.fromFile(path.toString)
+        val contents = file.mkString
+        file.close()
+        contents
+      }.flatMap { contents =>
+        Future.fromTry(parser(contents))
+      }
+    }
+
+  def fromS3[T](s3Client: AmazonS3,
+                bucket: String,
+                key: String,
+                refreshOptions: RefreshOptions = RefreshOptions())(
+      parser: String => Try[T])(
+      implicit system: ActorSystem,
+      context: ExecutionContext): DynamicConfiguration[T] =
+    DynamicConfiguration(refreshOptions) {
+      Future { s3Client.getObjectAsString(bucket, key) }.flatMap { contents =>
+        Future.fromTry(parser(contents))
+      }
+    }
+
 }
 
 trait DynamicConfigurationImpl[T] extends DynamicConfiguration[T] {
