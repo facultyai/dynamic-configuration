@@ -12,13 +12,13 @@ git.useGitDescribe := true
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.4.17",
-  "com.typesafe.play" %% "play-ws" % "2.5.14",
-  "com.amazonaws" % "aws-java-sdk-s3" % "1.11.98",
+  "com.typesafe.play" %% "play-ws" % "2.5.19",
+  "com.amazonaws" % "aws-java-sdk-s3" % "1.11.408",
   "com.typesafe.akka" %% "akka-testkit" % "2.4.17" % "test",
-  "org.mockito" % "mockito-core" % "2.7.14" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
-  "com.typesafe.play" %% "play" % "2.5.14" % "test",
-  "com.typesafe.play" %% "play-test" % "2.5.14" % "test"
+  "org.mockito" % "mockito-core" % "2.22.0" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+  "com.typesafe.play" %% "play" % "2.5.19" % "test",
+  "com.typesafe.play" %% "play-test" % "2.5.19" % "test"
 )
 
 scalacOptions ++= Seq(
