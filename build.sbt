@@ -2,13 +2,9 @@ organization := "com.asidatascience"
 
 name := "dynamic-configuration"
 
+version := "0.3.2-SNAPSHOT"
+
 scalaVersion := "2.11.12"
-
-enablePlugins(GitVersioning)
-
-enablePlugins(GitBranchPrompt)
-
-git.useGitDescribe := true
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.5.16",
