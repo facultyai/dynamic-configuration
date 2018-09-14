@@ -1,7 +1,7 @@
 package com.asidatascience.configuration
 
 import akka.actor.ActorSystem
-import play.api.libs.ws.WSClient
+import play.api.libs.ws.StandaloneWSClient
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
@@ -10,7 +10,7 @@ final case class HttpException(msg: String) extends Exception(msg)
 
 object DynamicConfigurationFromHttp {
   def apply[T](
-      wsClient: WSClient,
+      wsClient: StandaloneWSClient,
       url: String,
       refreshOptions: RefreshOptions = RefreshOptions()
   )(parser: String => Try[T])(
