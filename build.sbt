@@ -16,9 +16,7 @@ libraryDependencies ++= Seq(
   "com.amazonaws" % "aws-java-sdk-s3" % "1.11.98",
   "com.typesafe.akka" %% "akka-testkit" % "2.5.14" % "test",
   "org.mockito" % "mockito-core" % "2.7.14" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
-  "com.typesafe.play" %% "play" % "2.6.17" % "test",
-  "com.typesafe.play" %% "play-test" % "2.6.17" % "test"
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
 scalacOptions ++= Seq(
