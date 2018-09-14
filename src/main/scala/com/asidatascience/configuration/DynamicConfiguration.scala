@@ -1,13 +1,12 @@
 package com.asidatascience.configuration
 
 import akka.actor.{ActorSystem, Cancellable}
+import akka.event.Logging
 
 import scala.util.{Failure, Success}
 import scala.concurrent.{ExecutionContext, Future}
 
 import java.util.concurrent.atomic.AtomicReference
-
-import play.api.Logger
 
 trait DynamicConfiguration[T] {
   def currentConfiguration: Option[T]
@@ -41,7 +40,7 @@ trait DynamicConfigurationImpl[T] extends DynamicConfiguration[T] {
   implicit def actorSystem: ActorSystem
   implicit def executionContext: ExecutionContext
 
-  private val log = Logger(classOf[DynamicConfiguration[T]])
+  private val log = Logging(actorSystem, this.getClass)
 
   override def currentConfiguration: Option[T] =
     currentConfigurationReference.get()
@@ -62,7 +61,7 @@ trait DynamicConfigurationImpl[T] extends DynamicConfiguration[T] {
           currentConfigurationReference.compareAndSet(oldConfigurationMaybe,
                                                       Some(newConfiguration))
         case Failure(t) =>
-          log.warn("Failed to update current configuration. " +
+          log.warning("Failed to update current configuration. " +
                      "Falling back to previous version.",
                    t)
       }
