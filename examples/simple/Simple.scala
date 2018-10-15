@@ -1,20 +1,23 @@
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import scala.concurrent.{Future, Await}
+import scala.concurrent.{Await, Future}
 import scala.util.Try
 
 import akka.actor.ActorSystem
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.asidatascience.configuration.{DynamicConfigurationFromS3, RefreshOptions}
+import com.asidatascience.configuration.{
+  DynamicConfigurationFromS3,
+  RefreshOptions
+}
 import org.json4s._
 import org.json4s.native.JsonMethods
 
 case class FrozzlerConfiguration(model: String)
 
 class WidgetFrozzler(
-  configurationS3Bucket: String,
-  configurationS3Key: String
+    configurationS3Bucket: String,
+    configurationS3Key: String
 ) {
 
   implicit val actorSystem = ActorSystem()
@@ -32,16 +35,21 @@ class WidgetFrozzler(
   )
 
   val s3Client = AmazonS3ClientBuilder
-    .standard().withRegion(Regions.EU_WEST_1).build
+    .standard()
+    .withRegion(Regions.EU_WEST_1)
+    .build
 
-  lazy val configurationService = DynamicConfigurationFromS3[FrozzlerConfiguration](
-    s3Client,
-    configurationS3Bucket,
-    configurationS3Key,
-    refreshOptions
-  ){ contents => Try { parseConfiguration(contents) } }
+  lazy val configurationService =
+    DynamicConfigurationFromS3[FrozzlerConfiguration](
+      s3Client,
+      configurationS3Bucket,
+      configurationS3Key,
+      refreshOptions
+    ) { contents =>
+      Try { parseConfiguration(contents) }
+    }
 
-  def frozzleWidgets = {
+  def frozzleWidgets =
     configurationService.currentConfiguration match {
       case Some(configuration) =>
         val currentModel = configuration.model
@@ -49,7 +57,6 @@ class WidgetFrozzler(
       case None =>
         println(s"Configuration not ready")
     }
-  }
 
   def shutdown: Future[_] = {
     configurationService.stop
