@@ -26,14 +26,14 @@ class DynamicConfigurationFromS3Spec
   def newDynamicConfiguration(
       parse: String => Try[Configuration]
   ): DynamicConfiguration[Configuration] =
-    DynamicConfigurationFromS3(
+    DynamicConfiguration.fromS3(
       mockS3Client,
       dummyBucket,
       dummyKey,
       RefreshOptions(100.millis, 1000.millis)
     )(parse)
 
-  "DynamicConfigurationFromS3" should "return None initially" in {
+  "DynamicConfiguration from S3" should "return None initially" in {
     val parser = new TestConfigurationParser(dummyContents)
     val configuration = newDynamicConfiguration(parser.parse)
     configuration.currentConfiguration shouldEqual None

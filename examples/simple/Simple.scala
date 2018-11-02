@@ -13,7 +13,7 @@ import com.asidatascience.configuration.{
 import org.json4s._
 import org.json4s.native.JsonMethods
 
-case class FrozzlerConfiguration(model: String)
+final case class FrozzlerConfiguration(model: String)
 
 class WidgetFrozzler(
     configurationS3Bucket: String,
@@ -23,7 +23,7 @@ class WidgetFrozzler(
   implicit val actorSystem = ActorSystem()
 
   private def parseConfiguration(content: String) = {
-    // parse the contents of the configuration file
+    // Parse the contents of the configuration file.
     val contentAsJson = JsonMethods.parse(content)
     val JString(model) = (contentAsJson \ "widget-model")
     FrozzlerConfiguration(model)
@@ -40,7 +40,7 @@ class WidgetFrozzler(
     .build
 
   lazy val configurationService =
-    DynamicConfigurationFromS3[FrozzlerConfiguration](
+    DynamicConfiguration.fromS3[FrozzlerConfiguration](
       s3Client,
       configurationS3Bucket,
       configurationS3Key,
@@ -66,7 +66,7 @@ class WidgetFrozzler(
 
 object Simple extends App {
   val frozzler = new WidgetFrozzler(
-    "dynamic-configuration.asidatascience.com",
+    "dynamic-configuration.example.com",
     "examples/simple/sample-configuration.json"
   )
 
