@@ -38,7 +38,7 @@ scalacOptions ++= Seq(
 
 addCompilerPlugin("org.psywerx.hairyfotr" %% "linter" % "0.1.17")
 
-publishMavenStyle := false
+publishMavenStyle := true
 
 s3region := com.amazonaws.services.s3.model.Region.EU_Ireland
 
