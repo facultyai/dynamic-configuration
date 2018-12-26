@@ -2,13 +2,9 @@ organization := "com.asidatascience"
 
 name := "dynamic-configuration"
 
+version := "0.3.2-SNAPSHOT"
+
 scalaVersion := "2.11.12"
-
-enablePlugins(GitVersioning)
-
-enablePlugins(GitBranchPrompt)
-
-git.useGitDescribe := true
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.5.16",
@@ -42,7 +38,7 @@ scalacOptions ++= Seq(
 
 addCompilerPlugin("org.psywerx.hairyfotr" %% "linter" % "0.1.17")
 
-publishMavenStyle := false
+publishMavenStyle := true
 
 s3region := com.amazonaws.services.s3.model.Region.EU_Ireland
 
@@ -50,12 +46,12 @@ s3credentials := new com.amazonaws.auth.DefaultAWSCredentialsProviderChain()
 
 s3acl := com.amazonaws.services.s3.model.CannedAccessControlList.Private
 
-publishTo := {
-  val prefix = if (isSnapshot.value) "snapshots" else "releases"
-  Some(
-    s3resolver
-      .value("ASI " + prefix + " S3 bucket", s3(s"asi-$prefix-repository")) withIvyPatterns)
-}
+publishTo := Some(
+  if (isSnapshot.value)
+    Opts.resolver.sonatypeSnapshots
+   else
+    Opts.resolver.sonatypeStaging
+  )
 
 scalafmtTestOnCompile in Compile := true
 scalafmtTestOnCompile in Test := true
