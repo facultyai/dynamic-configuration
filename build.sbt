@@ -40,12 +40,6 @@ addCompilerPlugin("org.psywerx.hairyfotr" %% "linter" % "0.1.17")
 
 publishMavenStyle := true
 
-s3region := com.amazonaws.services.s3.model.Region.EU_Ireland
-
-s3credentials := new com.amazonaws.auth.DefaultAWSCredentialsProviderChain()
-
-s3acl := com.amazonaws.services.s3.model.CannedAccessControlList.Private
-
 publishTo := Some(
   if (isSnapshot.value)
     Opts.resolver.sonatypeSnapshots
