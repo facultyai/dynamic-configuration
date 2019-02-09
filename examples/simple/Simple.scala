@@ -6,7 +6,7 @@ import scala.util.Try
 import akka.actor.ActorSystem
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.asidatascience.configuration.{
+import ai.faculty.configuration.{
   DynamicConfigurationFromS3,
   RefreshOptions
 }

@@ -1,4 +1,4 @@
-package com.asidatascience.configuration
+package ai.faculty.configuration
 
 import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.duration._

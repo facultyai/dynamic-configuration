@@ -1,4 +1,4 @@
-package com.asidatascience.configuration
+package ai.faculty.configuration
 
 import java.io.{File, PrintWriter}
 import java.nio.file.{Path, Paths}

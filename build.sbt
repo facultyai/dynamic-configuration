@@ -1,4 +1,4 @@
-organization := "com.asidatascience"
+organization := "ai.faculty"
 
 name := "dynamic-configuration"
 
