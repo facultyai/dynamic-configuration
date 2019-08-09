@@ -2,7 +2,7 @@ organization := "ai.faculty"
 
 name := "dynamic-configuration"
 
-version := "0.3.2-SNAPSHOT"
+version := "0.3.2"
 
 scalaVersion := "2.11.12"
 
