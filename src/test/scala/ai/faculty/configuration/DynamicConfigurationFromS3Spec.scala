@@ -1,4 +1,4 @@
-package com.asidatascience.configuration
+package ai.faculty.configuration
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._

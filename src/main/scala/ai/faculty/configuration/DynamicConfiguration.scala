@@ -1,4 +1,4 @@
-package com.asidatascience.configuration
+package ai.faculty.configuration
 
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference

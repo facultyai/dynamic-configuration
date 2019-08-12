@@ -1,6 +1,6 @@
 # Dynamic configuration tools
 
-[![Build Status](https://travis-ci.org/ASIDataScience/dynamic-configuration.svg)](https://travis-ci.org/ASIDataScience/dynamic-configuration)
+[![Build Status](https://travis-ci.org/facultyai/dynamic-configuration.svg)](https://travis-ci.org/facultyai/dynamic-configuration)
 
 This repository provides tools for setting up configuration that refreshes at
 particular intervals. It assumes that the current configuration lives in a file
@@ -17,7 +17,7 @@ Let's assume that your configuration is formatted as JSON:
 
 ```json
 {
-  "widget-model": "ASI-1292"
+  "widget-model": "faculty-1292"
 }
 ```
 
@@ -38,7 +38,7 @@ import scala.util.Try
 
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.asidatascience.configuration.{DynamicConfiguration, RefreshOptions}
+import ai.faculty.configuration.{DynamicConfiguration, RefreshOptions}
 import org.json4s._
 
 final case class FrozzlerConfiguration(model: String)
@@ -91,14 +91,4 @@ class WidgetFrozzler(
 This is turned into a fully functional example in the
 [`/examples/simple`][example] directory.
 
-[example]: https://github.com/ASIDataScience/dynamic-configuration/tree/master/examples/simple
-
-## About ASI Data Science
-
-[![ASI Data Science](https://cloud.githubusercontent.com/assets/5845679/19309499/140ca760-907d-11e6-9234-4601a6a516ca.png)][ASI Data Science]
-
-dynamic-configuration is maintained by [ASI Data Science]. We empower
-organisations to become more data-driven by providing first class software,
-skills, and advisory solutions.
-
-[ASI Data Science]: https://www.asidatascience.com/
+[example]: https://github.com/facultyai/dynamic-configuration/tree/master/examples/simple
