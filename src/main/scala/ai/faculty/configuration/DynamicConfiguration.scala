@@ -9,6 +9,7 @@ import scala.util.{Failure, Success, Try}
 import akka.actor.{ActorSystem, Cancellable}
 import akka.event.Logging
 import com.amazonaws.services.s3.AmazonS3
+import akka.event.LogSource
 
 trait DynamicConfiguration[T] {
   def currentConfiguration: Option[T]
@@ -72,7 +73,13 @@ trait DynamicConfigurationImpl[T] extends DynamicConfiguration[T] {
   implicit def actorSystem: ActorSystem
   implicit def executionContext: ExecutionContext
 
-  private val log = Logging(actorSystem, this.getClass)
+  private implicit val logSource: LogSource[DynamicConfigurationImpl[_]] = 
+    new LogSource[DynamicConfigurationImpl[_]] {
+      override def genString(t: DynamicConfigurationImpl[_]): String = 
+        DynamicConfigurationImpl.this.getClass.getName
+    }
+
+  private val log = Logging(actorSystem, this)
 
   override def currentConfiguration: Option[T] =
     currentConfigurationReference.get()
