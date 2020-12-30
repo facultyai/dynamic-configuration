@@ -4,15 +4,15 @@ name := "dynamic-configuration"
 
 version := "0.3.3"
 
-scalaVersion := "2.11.12"
+scalaVersion := "2.13.4"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.5.16",
-  "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.1.2",
+  "com.typesafe.akka" %% "akka-actor" % "2.6.10",
+  "com.typesafe.play" %% "play-ahc-ws-standalone" % "2.1.2",
   "com.amazonaws" % "aws-java-sdk-s3" % "1.11.408",
-  "com.typesafe.akka" %% "akka-testkit" % "2.5.14" % "test",
+  "com.typesafe.akka" %% "akka-testkit" % "2.6.10" % "test",
   "org.mockito" % "mockito-core" % "2.22.0" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+  "org.scalatest" %% "scalatest" % "3.1.0" % "test"
 )
 
 scalacOptions ++= Seq(
@@ -23,20 +23,11 @@ scalacOptions ++= Seq(
   "-unchecked",
   "-Xcheckinit",
   "-Xlint:_",
-  "-Yno-adapted-args",
-  "-Ypartial-unification",
   "-Ywarn-dead-code",
-  "-Ywarn-inaccessible",
-  "-Ywarn-infer-any",
-  "-Ywarn-nullary-override",
-  "-Ywarn-nullary-unit",
   "-Ywarn-numeric-widen",
   "-Ywarn-unused",
-  "-Ywarn-unused-import",
   "-Ywarn-value-discard"
 )
-
-addCompilerPlugin("org.psywerx.hairyfotr" %% "linter" % "0.1.17")
 
 publishMavenStyle := true
 
