@@ -76,7 +76,7 @@ trait DynamicConfigurationImpl[T] extends DynamicConfiguration[T] {
   private implicit val logSource: LogSource[DynamicConfigurationImpl[_]] = 
     new LogSource[DynamicConfigurationImpl[_]] {
       override def genString(t: DynamicConfigurationImpl[_]): String = 
-        DynamicConfigurationImpl.this.getClass.getName
+        classOf[DynamicConfigurationImpl[_]].getName()
     }
 
   private val log = Logging(actorSystem, this)
