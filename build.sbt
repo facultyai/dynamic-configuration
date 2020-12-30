@@ -8,11 +8,14 @@ scalaVersion := "2.13.4"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.6.10",
+  // Not used but needs to be pinned for compatibility. See
+  //  https://doc.akka.io/docs/akka/current/common/binary-compatibility-rules.html#mixed-versioning-is-not-allowed
+  "com.typesafe.akka" %% "akka-stream" % "2.6.10",
   "com.typesafe.play" %% "play-ahc-ws-standalone" % "2.1.2",
   "com.amazonaws" % "aws-java-sdk-s3" % "1.11.408",
   "com.typesafe.akka" %% "akka-testkit" % "2.6.10" % "test",
-  "org.mockito" % "mockito-core" % "2.22.0" % "test",
-  "org.scalatest" %% "scalatest" % "3.1.0" % "test"
+  "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.9" % "test"
 )
 
 scalacOptions ++= Seq(
