@@ -8,7 +8,7 @@ import com.amazonaws.services.s3.AmazonS3
 import org.mockito.Mockito.when
 import org.scalatest._
 import org.scalatest.concurrent._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 class DynamicConfigurationFromS3Spec
     extends BaseSpec

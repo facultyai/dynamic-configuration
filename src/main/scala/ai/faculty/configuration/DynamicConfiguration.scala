@@ -91,7 +91,7 @@ trait DynamicConfigurationImpl[T] extends DynamicConfiguration[T] {
 
   def start(): Unit = {
     val RefreshOptions(delay, interval) = options
-    val task = actorSystem.scheduler.schedule(delay, interval) {
+    val task = actorSystem.scheduler.scheduleWithFixedDelay(delay, interval) { () =>
       val oldConfigurationMaybe = currentConfigurationReference.get
       updateConfiguration.onComplete {
         case Success(newConfiguration)
@@ -110,5 +110,5 @@ trait DynamicConfigurationImpl[T] extends DynamicConfiguration[T] {
     timer = Some(task)
   }
 
-  override def stop(): Unit = timer.foreach { _.cancel }
+  override def stop(): Unit = timer.foreach { _.cancel() }
 }
