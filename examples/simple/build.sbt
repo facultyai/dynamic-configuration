@@ -1,6 +1,6 @@
 name := "dynamic-configuration-simple-example"
 
-scalaVersion := "2.11.12"
+scalaVersion := "2.13.4"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.4.14",
