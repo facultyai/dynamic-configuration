@@ -7,7 +7,7 @@ import akka.actor.ActorSystem
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import ai.faculty.configuration.{
-  DynamicConfigurationFromS3,
+  DynamicConfiguration,
   RefreshOptions
 }
 import org.json4s._
@@ -58,9 +58,9 @@ class WidgetFrozzler(
         println(s"Configuration not ready")
     }
 
-  def shutdown: Future[_] = {
-    configurationService.stop
-    actorSystem.terminate
+  def shutdown(): Future[_] = {
+    configurationService.stop()
+    actorSystem.terminate()
   }
 }
 
@@ -76,5 +76,5 @@ object Simple extends App {
     Thread.sleep(1000)
   }
 
-  Await.ready(frozzler.shutdown, 5.seconds)
+  Await.ready(frozzler.shutdown(), 5.seconds)
 }
